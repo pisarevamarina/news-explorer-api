@@ -9,7 +9,6 @@ const { JWT_SECRET } = require('../utils/config');
 const getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
-
     if (!user) {
       throw new NotFoundError('Такой пользователь не существует');
     } else {
@@ -28,14 +27,14 @@ const createUser = (req, res, next) => {
   User.findOne({ email })
     .then((user) => {
       if (user) {
-        throw new ConflictError('Уже есть такой email');
+        throw new ConflictError('Такой email уже существует');
       }
       return bcrypt.hash(password, 10);
     })
     .then((hash) => {
       User.create({ name, email, password: hash })
-        .then(({ id }) => {
-          res.send({ name, email, id });
+        .then(() => {
+          res.send({ name, email });
         });
     })
     .catch(next);

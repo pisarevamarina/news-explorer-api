@@ -4,8 +4,8 @@ const NotFoundError = require('../errors/Not-Found-Error');
 const BadRequestError = require('../errors/Bad-Request-Error');
 
 const getArticles = async (req, res, next) => {
-  const owner = req.user.id;
   try {
+    const owner = req.user.id;
     const articles = await Article.find({ owner })
       .orFail(new NotFoundError('У пользователя нет сохраненных статей'));
     res.status(200).send(articles);
@@ -20,7 +20,7 @@ const createArticle = async (req, res, next) => {
       keyword, title, text, date, source, link, image,
     } = req.body;
     const owner = req.user.id;
-    const article = await Article.create({
+    await Article.create({
       keyword, title, text, date, source, link, image, owner,
     });
     res.status(200).send({
